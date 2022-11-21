@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class RandomTransforms
+public static class Utils
 {
     public static Vector3 GetRandomPosition()
     {
@@ -9,5 +9,9 @@ public static class RandomTransforms
     public static Quaternion GetRandomRotation()
     {
         return Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+    }
+    public static float GetRandomTimeToLive()
+    {
+        return Random.Range(1f, 3f);
     }
 }

@@ -4,31 +4,58 @@ public class AsteroidController : MonoBehaviour
 {
 
     private int life = 4;
+    private int fullLife = 4;
     MeshRenderer meshRenderer;
+    float timeToLive = 0f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
-        //meshRenderer.material.SetColor("_BaseColor", new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1));
-        meshRenderer.material.SetColor("_BaseColor", Colors.GetColor(4));
-        //Debug.Log(meshRenderer.material.GetColor("_BaseColor"));
+        timeToLive = Utils.GetRandomTimeToLive();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        this.transform.Rotate(0.5f * Vector3.up, Space.Self);
+        timeToLive -= Time.deltaTime;
+        if (timeToLive <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
-    public void TakeLifePoint()
+    public bool TakeLifePoint()
     {
         if (life > 1)
         {
+            meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.material.SetColor("_BaseColor", Colors.GetColor(--life));
+            return false;
         }
         else
         {
-            gameObject.SetActive(false);
+            life--;
+            return true;
+        }
+    }
+
+    public void InitAsteroid()
+    {
+        gameObject.SetActive(true);
+        meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer.material.SetColor("_BaseColor", Colors.GetColor(0));
+        timeToLive = Utils.GetRandomTimeToLive();
+    }
+    public void RespawnAsteroid()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+
+        gameObject.SetActive(true);
+        transform.position = Utils.GetRandomPosition();
+        transform.rotation = Utils.GetRandomRotation();
+        timeToLive = Utils.GetRandomTimeToLive();
+
+        if(life == 0)
+        {
+            meshRenderer.material.SetColor("_BaseColor", Colors.GetColor(0));
+            life = fullLife;
         }
     }
 }
