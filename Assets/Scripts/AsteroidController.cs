@@ -21,7 +21,7 @@ public class AsteroidController : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-    public bool TakeLifePoint()
+    public bool IsDestroyed()
     {
         if (life > 1)
         {

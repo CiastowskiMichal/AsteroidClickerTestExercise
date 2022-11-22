@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,14 +19,21 @@ public class SceneManager : MonoBehaviour
     [SerializeField]
     GameObject startGamePanel;
     private bool endGame = true;
+    private Ray ray;
+    private RaycastHit hit;
+
+    private readonly Timer timer = new Timer();
 
     void Start()
     {
         endGamePanel.SetActive(false);
         startGamePanel.SetActive(true);
         endGame = true;
-        
-        //InitScene();
+
+        timer.Interval = 200;
+        timer.Elapsed += delegate {
+            timer.Stop();
+        };
     }
 
     void Update()
@@ -77,17 +85,23 @@ public class SceneManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = this.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)
-                && hit.collider.tag == "Asteroid"
-                && hit.collider.GetComponent<AsteroidController>().TakeLifePoint())
+            if (timer.Enabled == false)
             {
-                scoreController.SetScore(++score);
-                hit.collider.gameObject.SetActive(false);
+                timer.Start();
+                return;
             }
-
-
+            else
+            {
+                timer.Stop();
+                ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit)
+                    && hit.collider.CompareTag("Asteroid")
+                    && hit.collider.GetComponent<AsteroidController>().IsDestroyed())
+                {
+                    scoreController.SetScore(++score);
+                    hit.collider.gameObject.SetActive(false);
+                }
+            }
         }
     }
 
@@ -112,7 +126,6 @@ public class SceneManager : MonoBehaviour
         if (score >= 15)
         {
             WinGame();
-
         }
     }
 
