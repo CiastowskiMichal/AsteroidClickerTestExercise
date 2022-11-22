@@ -107,17 +107,21 @@ public class SceneManager : MonoBehaviour
 
     void UpdateAsteroids()
     {
-        if (!endGame)
+        if (endGame)
+            return;
+
+        timeToUpdate -= Time.deltaTime;
+        if (timeToUpdate < 0f)
         {
-            timeToUpdate -= Time.deltaTime;
-            if (timeToUpdate < 0f)
+            timeToUpdate = timeToUpdateOriginal;
+            if (asteroids.Where(x => x.gameObject.activeSelf == false).Count() > 0)
             {
-                timeToUpdate = timeToUpdateOriginal;
-                if (asteroids.Where(x => x.gameObject.activeSelf == false).Count() > 0)
-                {
-                    asteroids.Where(x => x.gameObject.activeSelf == false).First().RespawnAsteroid();
-                }
+                asteroids.Where(x => x.gameObject.activeSelf == false).First().RespawnAsteroid();
             }
+        }
+        if(asteroids.Where(x=>x.gameObject.activeSelf == false).Count() > 5)
+        {
+            asteroids.Where(x => x.gameObject.activeSelf == false).First().RespawnAsteroid();
         }
     }
 

@@ -42,6 +42,7 @@ public class AsteroidController : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material.SetColor("_BaseColor", Colors.GetColor(0));
         timeToLive = Utils.GetRandomTimeToLive();
+        life = fullLife;
     }
     public void RespawnAsteroid()
     {
